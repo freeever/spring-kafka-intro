@@ -1,5 +1,6 @@
 package com.dit.spring.kafka.udemy.intro.dispatch.handler;
 
+import com.dit.spring.kafka.udemy.intro.dispatch.message.OrderCreated;
 import com.dit.spring.kafka.udemy.intro.dispatch.service.DispatchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,8 @@ public class OrderCreatedHandler {
     private final DispatchService dispatchService;
 
     @KafkaListener(id = "orderConsumerClient", topics = "order.created", groupId = "dispatch.order.created.consumer")
-    public void listen(String payload) {
-        log.info("Received message: layload: {}", payload);
-        dispatchService.process(payload);
+    public void listen(OrderCreated orderCreated) {
+        log.info("Received message: payload: orderId={}, item={}", orderCreated.getOrderId(), orderCreated.getItem());
+        dispatchService.process(orderCreated);
     }
 }

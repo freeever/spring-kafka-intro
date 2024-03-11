@@ -1,9 +1,14 @@
 package com.dit.spring.kafka.udemy.intro.dispatch.handler;
 
+import com.dit.spring.kafka.udemy.intro.dispatch.message.OrderCreated;
 import com.dit.spring.kafka.udemy.intro.dispatch.service.DispatchService;
+import com.dit.spring.kafka.udemy.intro.dispatch.util.TestEventData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
+import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -21,7 +26,8 @@ class OrderCreatedHandlerTest {
 
     @Test
     void listen() {
-        orderCreatedHandler.listen("payload");
-        verify(dispatchServiceMock, times(1)).process("payload");
+        OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
+        orderCreatedHandler.listen(testEvent);
+        verify(dispatchServiceMock, times(1)).process(testEvent);
     }
 }

@@ -1,8 +1,11 @@
 package com.dit.spring.kafka.udemy.intro.dispatch.service;
 
+import com.dit.spring.kafka.udemy.intro.dispatch.message.OrderCreated;
+import com.dit.spring.kafka.udemy.intro.dispatch.util.TestEventData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DispatchServiceTest {
@@ -16,6 +19,7 @@ class DispatchServiceTest {
 
     @Test
     void process() {
-        dispatchService.process("payload");
+        OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
+        dispatchService.process(testEvent);
     }
 }
