@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,9 +26,19 @@ class OrderCreatedHandlerTest {
     }
 
     @Test
-    void listen() {
+    void listen_Success() throws Exception {
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
         orderCreatedHandler.listen(testEvent);
+        verify(dispatchServiceMock, times(1)).process(testEvent);
+    }
+
+    @Test
+    void listen_ServiceThrowsException() throws Exception {
+        OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(randomUUID(), randomUUID().toString());
+        doThrow(new RuntimeException("Service failure")).when(dispatchServiceMock).process(testEvent);
+
+        orderCreatedHandler.listen(testEvent);
+
         verify(dispatchServiceMock, times(1)).process(testEvent);
     }
 }
