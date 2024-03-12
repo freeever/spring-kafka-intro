@@ -5,6 +5,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>dispatch</module>
+		<module>tracking</module>
+		<module>common-dto</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

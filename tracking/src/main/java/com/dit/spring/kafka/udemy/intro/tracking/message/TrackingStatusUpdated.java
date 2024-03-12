@@ -1,5 +1,6 @@
-package com.dit.spring.kafka.udemy.intro.dispatch.message;
+package com.dit.spring.kafka.udemy.intro.tracking.message;
 
+import com.dit.spring.kafka.udemy.intro.tracking.enums.TrackingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DispatchPreparing {
+public class TrackingStatusUpdated {
     private UUID orderId;
+    private TrackingStatus status;
 }
