@@ -6,8 +6,6 @@ import com.dit.spring.kafka.udemy.intro.dispatch.util.TestEventData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
