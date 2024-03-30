@@ -23,7 +23,7 @@ public class DispatchService {
 
     private final KafkaTemplate<String, Object> kafkaProducer;
 
-    public void process(OrderCreated orderCreated) throws Exception {
+    public void  process(String key, OrderCreated orderCreated) throws Exception {
         log.info("DispatchService is processing ");
 
         OrderDispatched orderDispatched = OrderDispatched.builder()
@@ -32,14 +32,14 @@ public class DispatchService {
                 .notes("Dispatched: " + orderCreated.getItem())
                 .build();
         // get() to make it Synchronous
-        kafkaProducer.send(ORDER_DISPATCHED.getTopicName(), orderDispatched).get();
+        kafkaProducer.send(ORDER_DISPATCHED.getTopicName(), key, orderDispatched).get();
 
         DispatchPreparing dispatchPreparing = DispatchPreparing.builder()
                 .orderId(orderCreated.getOrderId())
                 .build();
         // Send dispatch preparing message
-        kafkaProducer.send(DISPATCH_TRACKING.getTopicName(), dispatchPreparing);
+        kafkaProducer.send(DISPATCH_TRACKING.getTopicName(), key, dispatchPreparing);
 
-        log.info("Sent messages: orderId: {} - proccessedById: {}", orderCreated.getOrderId(), APPLICATION_ID);
+        log.info("Sent messages: key: {} - orderId: {} - proccessedById: {}", key, orderCreated.getOrderId(), APPLICATION_ID);
     }
 }
