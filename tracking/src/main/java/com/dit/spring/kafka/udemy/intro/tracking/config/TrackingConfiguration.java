@@ -27,19 +27,19 @@ import java.util.Map;
 public class TrackingConfiguration {
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, DispatchPreparing> kafkaListenerContainerFactory(ConsumerFactory<String, DispatchPreparing> consumerFactory) {
+        final ConcurrentKafkaListenerContainerFactory<String, DispatchPreparing> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory(@Value("${kafka.bootstrap-servers}") String bootstrapServers) {
-        Map<String, Object> config = new HashMap<>();
+    public ConsumerFactory<String, DispatchPreparing> consumerFactory(@Value("${kafka.bootstrap-servers}") String bootstrapServers) {
+        final Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         config.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, DispatchPreparing.class.getCanonicalName());
+        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, DispatchPreparing.class);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
         return new DefaultKafkaConsumerFactory<>(config);
