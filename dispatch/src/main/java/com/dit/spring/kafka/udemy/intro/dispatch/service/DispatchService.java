@@ -1,5 +1,6 @@
 package com.dit.spring.kafka.udemy.intro.dispatch.service;
 
+import com.dit.spring.kafka.udemy.intro.commondto.message.DispatchCompleted;
 import com.dit.spring.kafka.udemy.intro.commondto.message.DispatchPreparing;
 import com.dit.spring.kafka.udemy.intro.dispatch.message.OrderCreated;
 import com.dit.spring.kafka.udemy.intro.dispatch.message.OrderDispatched;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static com.dit.spring.kafka.udemy.intro.commondto.enums.TopicEnum.DISPATCH_TRACKING;
@@ -39,6 +42,12 @@ public class DispatchService {
                 .build();
         // Send dispatch preparing message
         kafkaProducer.send(DISPATCH_TRACKING.getTopicName(), key, dispatchPreparing);
+
+        DispatchCompleted dispatchCompleted = DispatchCompleted.builder()
+                .orderId(orderCreated.getOrderId())
+                .dispatchedDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .build();
+        kafkaProducer.send(DISPATCH_TRACKING.getTopicName(), key, dispatchCompleted);
 
         log.info("Sent messages: key: {} - orderId: {} - proccessedById: {}", key, orderCreated.getOrderId(), APPLICATION_ID);
     }
